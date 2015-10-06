@@ -196,7 +196,7 @@ read_message:
         msgs_read++;
 
     if (lwm > 0 && msgs_read % lwm == 0)
-        send_activate_write (peer, msgs_read);
+        send_peer_update (peer, msgs_read);
 
     return true;
 }
@@ -261,12 +261,14 @@ void zmq::pipe_t::process_activate_read ()
     }
 }
 
-void zmq::pipe_t::process_activate_write (uint64_t msgs_read_)
+void zmq::pipe_t::process_peer_update (uint64_t msgs_read_)
 {
     //  Remember the peer's message sequence number.
     peers_msgs_read = msgs_read_;
 
-    if (!out_active && state == active) {
+    if (!out_active
+        && state == active
+        && static_cast <int> (msgs_written - peers_msgs_read) <= lwm) {
         out_active = true;
         sink->write_activated (this);
     }

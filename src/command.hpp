@@ -60,7 +60,7 @@ namespace zmq
             attach,
             bind,
             activate_read,
-            activate_write,
+            peer_update,
             hiccup,
             pipe_term,
             pipe_term_ack,
@@ -111,7 +111,7 @@ namespace zmq
             //  messages it has read so far.
             struct {
                 uint64_t msgs_read;
-            } activate_write;
+            } peer_update;
 
             //  Sent by pipe reader to writer after creating a new inpipe.
             //  The parameter is actually of type pipe_t::upipe_t, however,

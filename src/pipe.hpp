@@ -145,7 +145,7 @@ namespace zmq
 
         //  Command handlers.
         void process_activate_read ();
-        void process_activate_write (uint64_t msgs_read_);
+        void process_peer_update (uint64_t msgs_read_);
         void process_hiccup (void *pipe_);
         void process_pipe_term ();
         void process_pipe_term_ack ();
