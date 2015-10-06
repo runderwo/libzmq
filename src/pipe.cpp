@@ -84,6 +84,7 @@ zmq::pipe_t::pipe_t (object_t *parent_, upipe_t *inpipe_, upipe_t *outpipe_,
     lwm (compute_lwm (inhwm_)),
     inhwmboost(0),
     outhwmboost(0),
+    update_chunk (compute_update_chunk (inhwm_)),
     msgs_read (0),
     msgs_written (0),
     peers_msgs_read (0),
@@ -195,7 +196,7 @@ read_message:
     if (!(msg_->flags () & msg_t::more) && !msg_->is_identity ())
         msgs_read++;
 
-    if (lwm > 0 && msgs_read % lwm == 0)
+    if (update_chunk > 0 && msgs_read % update_chunk == 0)
         send_peer_update (peer, msgs_read);
 
     return true;
@@ -474,6 +475,16 @@ int zmq::pipe_t::compute_lwm (int hwm_)
     return result;
 }
 
+int zmq::pipe_t::compute_update_chunk (int hwm_)
+{
+    // the update_chunk should be smaller than (hwm - lwm)
+    int result = (hwm_ > max_wm_delta * 8)
+        ? max_wm_delta
+        : (hwm_ + 7) / 8;
+
+    return result;
+}
+
 void zmq::pipe_t::process_delimiter ()
 {
     zmq_assert (state == active
@@ -524,6 +535,7 @@ void zmq::pipe_t::set_hwms (int inhwm_, int outhwm_)
         out = 0;
 
     lwm = compute_lwm(in);
+    update_chunk = compute_update_chunk (in);
     hwm = out;
 }
 

@@ -183,6 +183,9 @@ namespace zmq
         int inhwmboost;
         int outhwmboost;
 
+        //  How many reads will cause statistics to be updated to the peer pipe.
+        int update_chunk;
+
         //  Number of messages read and written so far.
         uint64_t msgs_read;
         uint64_t msgs_written;
@@ -236,6 +239,10 @@ namespace zmq
 
         //  Computes appropriate low watermark from the given high watermark.
         static int compute_lwm (int hwm_);
+
+        //  Computes from the high watermark how many reads will cause the
+        //  peer pipe to be updated.
+        static int compute_update_chunk (int hwm_);
 
         const bool conflate;
 
