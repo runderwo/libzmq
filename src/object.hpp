@@ -97,8 +97,8 @@ namespace zmq
         void send_attach (zmq::session_base_t *destination_,
              zmq::i_engine *engine_, bool inc_seqnum_ = true);
         void send_activate_read (zmq::pipe_t *destination_);
-        void send_activate_write (zmq::pipe_t *destination_,
-             uint64_t msgs_read_);
+        void send_peer_update (zmq::pipe_t *destination_,
+                               uint64_t msgs_read_);
         void send_hiccup (zmq::pipe_t *destination_, void *pipe_);
         void send_pipe_term (zmq::pipe_t *destination_);
         void send_pipe_term_ack (zmq::pipe_t *destination_);
@@ -118,7 +118,7 @@ namespace zmq
         virtual void process_attach (zmq::i_engine *engine_);
         virtual void process_bind (zmq::pipe_t *pipe_);
         virtual void process_activate_read ();
-        virtual void process_activate_write (uint64_t msgs_read_);
+        virtual void process_peer_update (uint64_t msgs_read_);
         virtual void process_hiccup (void *pipe_);
         virtual void process_pipe_term ();
         virtual void process_pipe_term_ack ();

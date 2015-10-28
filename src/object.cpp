@@ -77,8 +77,8 @@ void zmq::object_t::process_command (command_t &cmd_)
         process_activate_read ();
         break;
 
-    case command_t::activate_write:
-        process_activate_write (cmd_.args.activate_write.msgs_read);
+    case command_t::peer_update:
+        process_peer_update (cmd_.args.peer_update.msgs_read);
         break;
 
     case command_t::stop:
@@ -255,13 +255,13 @@ void zmq::object_t::send_activate_read (pipe_t *destination_)
     send_command (cmd);
 }
 
-void zmq::object_t::send_activate_write (pipe_t *destination_,
+void zmq::object_t::send_peer_update (pipe_t *destination_,
     uint64_t msgs_read_)
 {
     command_t cmd;
     cmd.destination = destination_;
-    cmd.type = command_t::activate_write;
-    cmd.args.activate_write.msgs_read = msgs_read_;
+    cmd.type = command_t::peer_update;
+    cmd.args.peer_update.msgs_read = msgs_read_;
     send_command (cmd);
 }
 
@@ -380,7 +380,7 @@ void zmq::object_t::process_activate_read ()
     zmq_assert (false);
 }
 
-void zmq::object_t::process_activate_write (uint64_t)
+void zmq::object_t::process_peer_update (uint64_t)
 {
     zmq_assert (false);
 }
