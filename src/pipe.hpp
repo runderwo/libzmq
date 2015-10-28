@@ -145,7 +145,7 @@ namespace zmq
 
         //  Command handlers.
         void process_activate_read ();
-        void process_activate_write (uint64_t msgs_read_);
+        void process_peer_update (uint64_t msgs_read_);
         void process_hiccup (void *pipe_);
         void process_pipe_term ();
         void process_pipe_term_ack ();
@@ -182,6 +182,9 @@ namespace zmq
         // boosts for high and low watermarks, used with inproc sockets so hwm are sum of send and recv hmws on each side of pipe
         int inhwmboost;
         int outhwmboost;
+
+        //  How many reads will cause statistics to be updated to the peer pipe.
+        int update_chunk;
 
         //  Number of messages read and written so far.
         uint64_t msgs_read;
@@ -236,6 +239,10 @@ namespace zmq
 
         //  Computes appropriate low watermark from the given high watermark.
         static int compute_lwm (int hwm_);
+
+        //  Computes from the high watermark how many reads will cause the
+        //  peer pipe to be updated.
+        static int compute_update_chunk (int hwm_);
 
         const bool conflate;
 
